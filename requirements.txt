@@ -1,0 +1,7 @@
+jupyter
+pandas 
+scikit-learn 
+mlflow 
+xgboost 
+hyperopt 
+prefect==2.0b6

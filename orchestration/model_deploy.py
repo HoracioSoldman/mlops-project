@@ -19,7 +19,7 @@ import mlflow
 from prefect import flow, task
 from prefect.task_runners import SequentialTaskRunner
 
-@task
+
 def read_df(file_path, dataset_size_in_million):
     df_chuncks = pd.read_csv(file_path, chunksize=1000000)
     df = pd.DataFrame({"columns":[]})
@@ -30,7 +30,6 @@ def read_df(file_path, dataset_size_in_million):
         index+=1
     return df
 
-@task
 def extract_dep_hour(dep_time):
     dep_time = str(int(dep_time))
     
@@ -38,7 +37,7 @@ def extract_dep_hour(dep_time):
         dep_time = f'0{dep_time}'
     return dep_time
 
-@task
+
 def get_train_df(df_source, target):
     df= df_source[['FL_DATE', 'OP_CARRIER', 'ORIGIN', 'DEST', 'DEP_TIME', 'DISTANCE', 'CRS_DEP_TIME', 'DEP_DELAY']]
     df['FL_DATE'] = pd.to_datetime(df['FL_DATE'])
@@ -79,7 +78,7 @@ def get_trainable_data(data_path, target):
 
     # for the other data which is the remaining one, we split it into test and validation
     test_size = 0.5
-    X_valid, X_test, y_valid, y_test = train_test_split(X_oth, y_oth, test_size=0.5)
+    X_valid, X_test, y_valid, y_test = train_test_split(X_oth, y_oth, test_size=test_size)
 
     return X_train, y_train, X_valid, y_valid, X_test, y_test, dv
 
@@ -192,7 +191,7 @@ def best_xgboost_model(train, valid, y_valid, dv):
 
 
 @flow(task_runner=SequentialTaskRunner())
-def main(data_path = '../data/2018.csv'):
+def main_flow(data_path = 'data/2018.csv'):
     MLFLOW_TRACKING_URI = "http://127.0.0.1:5000"
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 
@@ -209,13 +208,19 @@ def main(data_path = '../data/2018.csv'):
     valid = xgb.DMatrix(X_val, label=y_val.values)
     best_xgboost_model(train, valid, y_val, dv)
 
-from prefect.deployments import Deployment
+# without any prefect deployment, just comment out the 2 following lines and execute: python orchestration/model_deploy.py
+# to run the script
+# if __name__ == '__main__':
+#     main_flow()
+
+# the following section is used when we want to deploy the project on prefect 
+from prefect.deployments import DeploymentSpec
 from prefect.orion.schemas.schedules import IntervalSchedule
 from prefect.flow_runners import SubprocessFlowRunner
 from datetime import timedelta
 
-Deployment(
-    flow=main,
+DeploymentSpec(
+    flow=main_flow,
     name="model_training",
     schedule=IntervalSchedule(interval=timedelta(days=3)),
     flow_runner=SubprocessFlowRunner(),

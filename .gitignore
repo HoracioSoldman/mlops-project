@@ -11,3 +11,5 @@ mlruns/
 notebook/models/*.bin
 
 *.db
+
+venv
