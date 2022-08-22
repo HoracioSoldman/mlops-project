@@ -10,4 +10,6 @@ mlruns/
 
 *.db
 
+.terraform
+
 venv
