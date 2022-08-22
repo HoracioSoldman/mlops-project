@@ -1,1 +1,13 @@
-data/*.csv
+*.csv
+
+notebook/.ipynb_checkpoints
+
+notebook/artifacts/*
+
+mlruns/
+
+.ipynb_checkpoints
+
+notebook/models/*.bin
+
+*.db

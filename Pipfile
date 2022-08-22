@@ -8,6 +8,8 @@ jupyter = "*"
 pandas = "*"
 scikit-learn = "*"
 mlflow = "*"
+xgboost = "*"
+hyperopt = "*"
 
 [dev-packages]
 
