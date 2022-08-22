@@ -1,5 +1,11 @@
 ## mlops-project
-This project aims to predict the delay of flight departures on a dataset from [Airline delay and cancellation data 2009-2018](https://www.kaggle.com/datasets/yuanyuwendymu/airline-delay-and-cancellation-data-2009-2018)
+This project aims to predict the delay of flight departures in the dataset [Airline delay and cancellation data 2009-2018](https://www.kaggle.com/datasets/yuanyuwendymu/airline-delay-and-cancellation-data-2009-2018).
+
+
+By providing several necessary flight information, the final model is able to predict the delay of the given flight departure. 
+
+The project was developed and can be hosted on a Google VM hosted on GCP. 
+Terraform is used to provision the infrastructure.
 
 
 ### 1. Installing the project
@@ -69,4 +75,30 @@ docker run -it --rm -p 7200:7200  delay-prediction-service:v1
 ```bash
 python flask-deployment/tester.py
 ```
+
+### 3. Using terraform
+
+1. Move to the `terraform directory`
+
+```bash
+cd terraform
+```
+
+
+2. Specify the path to the `.json` file containing the Google credentials before calling Terraform.
+
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=~/.google/credentials/google_credentials.json
+
+```
+
+3. Enable IAM API by visiting [IAM API](https://console.cloud.google.com/apis/api/iam.googleapis.com) then click on: __ENABLE API__
+#### Terraform Execution steps
+- `terraform init`: 
+    * Initializes & configures the backend, installs plugins/providers, & checks out an existing configuration from a version control. 
+- `terraform plan`:
+    * Matches/previews local changes against a remote state, and proposes an Execution Plan.
+- `terraform apply`: 
+    * Asks for approval to the proposed plan, and applies changes to cloud.
+
 
