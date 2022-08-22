@@ -52,3 +52,21 @@ Then head over to the Prefect UI at [http://127.0.0.1:4200](http://127.0.0.1:420
 ```bash
      prefect deployment create orchestration/model_deploy.py 
 ```
+
+### Deployment
+- With Docker and flask
+
+```bash
+docker build -t delay-prediction-service:v1 .
+```
+
+```bash
+docker run -it --rm -p 7200:7200  delay-prediction-service:v1
+```
+
+### Test the model
+
+```bash
+python flask-deployment/tester.py
+```
+

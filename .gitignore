@@ -8,8 +8,6 @@ mlruns/
 
 .ipynb_checkpoints
 
-notebook/models/*.bin
-
 *.db
 
 venv
